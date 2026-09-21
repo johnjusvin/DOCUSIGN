@@ -1,0 +1,224 @@
+.signature-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+}
+
+.signature-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.signature-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  transition: all var(--transition);
+}
+
+.close-btn:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.signature-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sig-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.sig-tab:hover {
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.sig-tab.active {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.signature-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.draw-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.signature-canvas {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: white;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.signature-canvas:hover {
+  border-color: var(--color-primary);
+}
+
+.draw-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.color-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.color-picker input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  padding: 0;
+}
+
+.type-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.type-preview {
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 48px;
+  font-weight: 400;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+.type-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.upload-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upload-zone {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 48px 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  width: 100%;
+  max-width: 400px;
+}
+
+.upload-zone:hover {
+  border-color: var(--color-primary);
+  background: rgba(10, 22, 40, 0.03);
+}
+
+.upload-zone svg {
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+}
+
+.upload-zone p {
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.upload-zone span {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.upload-zone img {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  background: var(--color-surface);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(10, 22, 40, 0.1);
+}
+
+.signature-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+}

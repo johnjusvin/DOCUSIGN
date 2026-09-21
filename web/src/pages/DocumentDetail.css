@@ -1,0 +1,246 @@
+.back-link {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.back-link:hover {
+  color: var(--color-primary);
+}
+
+.rename-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.rename-row input {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 320px;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-secondary.danger {
+  color: var(--color-danger);
+}
+
+.btn-secondary.danger:hover {
+  background: #fef2f2;
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.btn-secondary.sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1000px;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.card > h3 {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.card-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.file-rows {
+  padding: 8px 24px 16px;
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.file-row:last-child {
+  border-bottom: none;
+}
+
+.not-yet {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.hash {
+  padding: 0 24px 20px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.hash code {
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.request-block {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.request-block:last-child {
+  border-bottom: none;
+}
+
+.request-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.request-meta {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.signer-progress {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.signer-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.signer-chip.signed {
+  background: #ecfdf5;
+}
+
+.signer-chip.declined {
+  background: #fef2f2;
+}
+
+.signer-order {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.signer-who {
+  font-weight: 500;
+  flex: 1;
+  min-width: 180px;
+}
+
+.signer-st {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.copy-link {
+  font-size: 12px;
+  color: var(--color-primary);
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.copy-link:hover {
+  background: rgba(10, 22, 40, 0.08);
+}
+
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.audit-table th,
+.audit-table td {
+  padding: 10px 24px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.audit-table th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+}
+
+.audit-table code {
+  font-family: monospace;
+  font-size: 12px;
+  background: var(--color-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-Draft { background: #f3f4f6; color: #4b5563; }
+.status-Sent { background: #dbeafe; color: #1d4ed8; }
+.status-InProgress { background: #fef3c7; color: #b45309; }
+.status-Completed { background: #d1fae5; color: #047857; }
+.status-Declined { background: #fee2e2; color: #b91c1c; }
+.status-Expired { background: #f3f4f6; color: #6b7280; }
+.status-Cancelled { background: #f3f4f6; color: #6b7280; }
+.status-Archived { background: #f3f4f6; color: #6b7280; }
+.status-Signed { background: #d1fae5; color: #047857; }

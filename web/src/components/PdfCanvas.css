@@ -1,0 +1,32 @@
+.pdf-canvas-wrap {
+  position: relative;
+  display: inline-block;
+  background: white;
+  box-shadow: var(--shadow-lg);
+  line-height: 0;
+}
+
+.pdf-canvas-el {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.pdf-overlay-layer {
+  position: absolute;
+  inset: 0;
+  line-height: 1.5;
+}
+
+.pdf-error {
+  padding: 48px 32px;
+  text-align: center;
+  color: var(--color-text-muted);
+  background: white;
+  line-height: 1.5;
+}
+
+.pdf-error span {
+  font-size: 12px;
+  font-family: monospace;
+}

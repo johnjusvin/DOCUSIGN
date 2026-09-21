@@ -1,0 +1,73 @@
+# ============================= REDITUS SIGN — .gitignore =============================
+
+# --- Dependencies (rebuilt via `npm install`) ---
+node_modules/
+.opencode/node_modules/
+.pnp
+.pnp.js
+
+# --- Secrets & local config (NEVER commit) ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials*.json
+*token*.json
+google-credentials.json
+service-account*.json
+
+# --- Runtime data (local SQLite DB, file store, sessions) ---
+data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# --- Build output (rebuilt via `npm run build`) ---
+web/dist/
+dist/
+build/
+
+# --- Logs & temp ---
+*.log
+logs/
+*.tmp
+*.temp
+tmp/
+temp/
+uploads/
+
+# --- OS junk ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# --- Editors / IDEs ---
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+*.sublime-project
+*.sublime-workspace
+
+# --- Test artifacts ---
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+
+# --- Misc ---
+*.orig
+*.rej
+*.bak

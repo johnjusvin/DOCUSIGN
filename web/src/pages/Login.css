@@ -1,0 +1,130 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8edf2 100%);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 48px 40px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-logo {
+  margin-bottom: 16px;
+}
+
+.login-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+
+.tagline {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: 15px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  transition: all var(--transition);
+  background: var(--color-surface);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(10, 22, 40, 0.1);
+}
+
+.form-group input:disabled {
+  background: var(--color-bg);
+  cursor: not-allowed;
+}
+
+.error-message {
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  font-size: 14px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px 24px;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: var(--radius-md);
+  transition: all var(--transition);
+  margin-top: 8px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-light);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-hint {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.login-hint code {
+  background: var(--color-bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 12px;
+}

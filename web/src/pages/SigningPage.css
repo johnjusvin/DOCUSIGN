@@ -1,0 +1,580 @@
+.signing-page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.signing-loading,
+.signing-error,
+.signing-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  text-align: center;
+  gap: 16px;
+}
+
+.signing-loading .spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.signing-error svg,
+.signing-complete svg {
+  color: var(--color-text-muted);
+}
+
+.signing-error h2,
+.signing-complete h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.signing-error p,
+.signing-complete p {
+  font-size: 16px;
+  color: var(--color-text-muted);
+}
+
+.signing-complete svg {
+  color: var(--color-success);
+}
+
+.complete-details {
+  font-size: 14px !important;
+  max-width: 400px;
+}
+
+.error-hint {
+  font-size: 14px !important;
+  max-width: 400px;
+}
+
+.signing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.signing-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-primary);
+}
+
+.signing-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 300px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.signing-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.document-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  margin: 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.document-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.doc-info h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.doc-info p {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.page-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-nav button {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+
+.page-nav button:hover:not(:disabled) {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.page-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-nav span {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  min-width: 80px;
+  text-align: center;
+}
+
+.document-canvas-container {
+  flex: 1;
+  position: relative;
+  background: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow: auto;
+}
+
+.document-canvas {
+  box-shadow: var(--shadow-lg);
+  background: white;
+}
+
+.field-overlay {
+  position: absolute;
+  border: 2px dashed #00d4aa;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.field-overlay:hover {
+  border-color: #0a1628;
+  border-style: solid;
+}
+
+.field-overlay.current {
+  border-color: #0a1628;
+  border-style: solid;
+  box-shadow: 0 0 0 2px rgba(10, 22, 40, 0.2);
+}
+
+.field-overlay.filled {
+  border-color: #10b981;
+  border-style: solid;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.field-label {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.field-label .required {
+  color: #fecaca;
+  margin-left: 2px;
+}
+
+.field-filled-indicator {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  width: 18px;
+  height: 18px;
+  background: #10b981;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.checkbox-check {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  color: #10b981;
+  font-weight: bold;
+}
+
+.field-signature-preview {
+  position: absolute;
+  inset: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.field-signature-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.field-resize-handle {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background: #0a1628;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.field-overlay:hover .field-resize-handle,
+.field-overlay.current .field-resize-handle {
+  opacity: 1;
+}
+
+.sidebar-panel {
+  width: 360px;
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sidebar-section:last-child {
+  border-bottom: none;
+}
+
+.sidebar-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+}
+
+.field-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.field-nav-item:hover {
+  border-color: var(--color-primary);
+}
+
+.field-nav-item.current {
+  border-color: var(--color-primary);
+  background: rgba(10, 22, 40, 0.05);
+}
+
+.field-nav-item.filled {
+  border-color: #10b981;
+}
+
+.field-nav-item.empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+.field-nav-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.field-nav-item.current .field-nav-number {
+  background: var(--color-primary);
+  color: white;
+}
+
+.field-nav-item.filled .field-nav-number {
+  background: #10b981;
+  color: white;
+}
+
+.field-nav-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.field-nav-type {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.field-nav-page {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.field-nav-check {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.signer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.signer-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.signer-name {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.signer-email {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.agreement-section {
+  padding-bottom: 0;
+}
+
+.agreement-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--color-text);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.agreement-checkbox input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--color-primary);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.btn-decline {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-danger);
+  font-weight: 500;
+  font-size: 14px;
+  background: var(--color-surface);
+  transition: all var(--transition);
+}
+
+.btn-decline:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: var(--color-danger);
+}
+
+.btn-decline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.field-inline-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.field-inline-input:focus {
+  outline: 2px solid var(--color-primary);
+  background: white;
+}
+
+.field-overlay.locked {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.signing-message {
+  margin: 16px 24px 0;
+  padding: 14px 20px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@media (max-width: 1024px) {
+  .signing-main {
+    flex-direction: column;
+  }
+  
+  .sidebar-panel {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--color-border);
+    max-height: 50vh;
+  }
+  
+  .document-panel {
+    margin: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .signing-header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .signing-progress {
+    min-width: 100%;
+  }
+  
+  .doc-info h1 {
+    font-size: 16px;
+  }
+}
