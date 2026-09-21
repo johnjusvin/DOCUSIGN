@@ -31,7 +31,8 @@ export function buildPublicRequestsRouter() {
       const fresh = touchSignerViewed(signer, { ip: req.ip, userAgent: req.get('user-agent') });
       const fields = fieldsForRequest(request.id).map((f) => ({
         id: f.id, page: f.page, x: f.x, y: f.y, width: f.width, height: f.height,
-        type: f.type, label: f.label, required: !!f.required,
+        type: f.type, label: f.label, required: !!f.required, font_size: f.font_size || 12,
+        options: f.options ? f.options.split(/\r?\n/).map((o) => o.trim()).filter(Boolean) : [],
         mine: f.signer_id === signer.id,
         filled: !!f.filled,
         // Never leak other signers' values; only expose own filled state subtly via `filled`

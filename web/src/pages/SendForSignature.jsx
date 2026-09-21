@@ -190,7 +190,7 @@ export function SendForSignature() {
         fields: fields.map((f) => ({
           page: f.page, x: f.x, y: f.y, width: f.width, height: f.height,
           type: f.type, signer_index: f.signer_index, label: f.label,
-          required: f.required, options: f.options, value: f.value,
+          required: f.required, options: f.options, value: f.value, font_size: f.font_size,
         })),
         mode: signingOrder,
         message,

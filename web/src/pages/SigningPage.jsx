@@ -112,10 +112,6 @@ export function SigningPage() {
     if (field.type === 'signature' || field.type === 'initials') {
       setActiveSignatureField(field)
       setShowSignaturePad(true)
-    } else if (field.type === 'checkbox') {
-      setValue(field.id, !values[field.id])
-    } else if (field.type === 'date') {
-      setValue(field.id, new Date().toLocaleDateString())
     } else if (field.type === 'name') {
       setValue(field.id, signer.name)
     } else if (field.type === 'email') {
@@ -137,6 +133,12 @@ export function SigningPage() {
     if (!agreed) { alert('You must agree to sign electronically'); return }
     const missing = myRequired.filter((f) => !isFilled(f, values))
     if (missing.length > 0) { alert(`Please complete all required fields (${missing.length} remaining)`); return }
+    const bad = myRequired.filter((f) => !isValid(f, values[f.id]))
+    if (bad.length > 0) {
+      const f = bad[0]
+      alert(`Invalid ${f.type}${f.label ? ` — ${f.label}` : ''}: ${invalidMessage(f)}`)
+      return
+    }
     setSubmitting(true)
     try {
       const payload = {}
@@ -336,10 +338,30 @@ export function SigningPage() {
 function isFilled(field, values) {
   const v = values[field.id]
   if (field.type === 'checkbox') return v === true
+  if (field.type === 'radio' || field.type === 'choice') {
+    return typeof v === 'string' && v.trim().length > 0
+  }
   if (field.type === 'signature' || field.type === 'initials') {
     return typeof v === 'string' && v.startsWith('data:image/')
   }
   return typeof v === 'string' && v.trim().length > 0
+}
+
+function isValid(field, v) {
+  if (v === undefined || v === '' || v === false) return !field.required
+  if (field.type === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v))
+  if (field.type === 'date') return !Number.isNaN(Date.parse(String(v)))
+  if ((field.type === 'radio' || field.type === 'choice') && field.options && field.options.length) {
+    return field.options.includes(String(v))
+  }
+  return true
+}
+
+function invalidMessage(field) {
+  if (field.type === 'email') return 'Please enter a valid email address'
+  if (field.type === 'date') return 'Please choose a valid date'
+  if (field.type === 'radio' || field.type === 'choice') return 'Please choose one of the provided options'
+  return 'Please enter a valid value'
 }
 
 function FieldOverlay({ field, value, isCurrent, onClick, onTextChange, pageSize }) {
@@ -352,7 +374,100 @@ function FieldOverlay({ field, value, isCurrent, onClick, onTextChange, pageSize
   }
   const color = fieldTypeColors[field.type] || '#0a1628'
   const interactive = field.mine && !field.filled
-  const showInput = interactive && ['text', 'name', 'email', 'date'].includes(field.type)
+  const opts = (field.options && field.options.length ? field.options : [])
+
+  const renderControl = () => {
+    if (!interactive) return null
+    switch (field.type) {
+      case 'text':
+      case 'name':
+        return (
+          <input
+            className="field-inline-input"
+            type="text"
+            value={typeof value === 'string' ? value : ''}
+            placeholder={field.label || `Enter ${field.type}`}
+            onChange={(e) => onTextChange(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            style={{ fontSize: field.font_size || 12 }}
+          />
+        )
+      case 'email':
+        return (
+          <input
+            className="field-inline-input"
+            type="email"
+            value={typeof value === 'string' ? value : ''}
+            placeholder={field.label || 'Enter email'}
+            onChange={(e) => onTextChange(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            style={{ fontSize: field.font_size || 12 }}
+          />
+        )
+      case 'date':
+        return (
+          <input
+            className="field-inline-input field-inline-date"
+            type="date"
+            value={typeof value === 'string' ? value : ''}
+            onChange={(e) => onTextChange(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            style={{ fontSize: field.font_size || 12 }}
+          />
+        )
+      case 'checkbox':
+        return (
+          <input
+            className="field-inline-check"
+            type="checkbox"
+            checked={value === true}
+            onChange={(e) => { e.stopPropagation(); onTextChange(e.target.checked) }}
+            onClick={(e) => e.stopPropagation()}
+          />
+        )
+      case 'radio':
+        return (
+          <div className="field-radio-options">
+            {opts.length ? opts.map((opt) => (
+              <label key={opt}>
+                <input
+                  type="radio"
+                  name={field.id}
+                  checked={value === opt}
+                  onChange={() => onTextChange(opt)}
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <span>{opt}</span>
+              </label>
+            )) : <span className="radio-empty">No options set by sender</span>}
+          </div>
+        )
+      case 'choice':
+        return (
+          <select
+            className="field-inline-select"
+            value={typeof value === 'string' ? value : ''}
+            onChange={(e) => onTextChange(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            style={{ fontSize: field.font_size || 12 }}
+          >
+            <option value="" disabled>{field.label || 'Select an option'}</option>
+            {opts.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
+            {!opts.length && <option value="" disabled>No options set by sender</option>}
+          </select>
+        )
+      case 'signature':
+      case 'initials':
+        if (typeof value === 'string' && value.startsWith('data:image/')) return null
+        return (
+          <div className="field-sign-hint">
+            {field.type === 'initials' ? '✎ Initials' : '✎ Click to sign'}
+          </div>
+        )
+      default:
+        return null
+    }
+  }
 
   return (
     <div
@@ -364,16 +479,8 @@ function FieldOverlay({ field, value, isCurrent, onClick, onTextChange, pageSize
       <div className="field-label" style={{ background: color }}>
         {field.mine ? field.type : '🔒 ' + field.type}{field.required && <span className="required">*</span>}
       </div>
-      {showInput ? (
-        <input
-          className="field-inline-input"
-          value={typeof value === 'string' ? value : ''}
-          placeholder={field.label || `Enter ${field.type}`}
-          onChange={(e) => onTextChange(e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      ) : null}
-      {filled && field.type !== 'checkbox' && !showInput && (
+      {renderControl()}
+      {filled && field.type !== 'checkbox' && !['text', 'name', 'email', 'date', 'radio', 'choice'].includes(field.type) && (
         <div className="field-filled-indicator">✓</div>
       )}
       {field.type === 'checkbox' && (value === true) && (

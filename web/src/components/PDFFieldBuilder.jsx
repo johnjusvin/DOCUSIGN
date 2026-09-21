@@ -58,6 +58,7 @@ export function PDFFieldBuilder({ document, pdfUrl, pdfPages, fields, signers, o
       required: true,
       label: '',
       value: '',
+      font_size: 12,
     }
     onFieldsChange([...fields, newField])
     setSelectedFieldId(newField.id)
@@ -263,6 +264,7 @@ export function PDFFieldBuilder({ document, pdfUrl, pdfPages, fields, signers, o
 
 function FieldProperties({ field, signers, onUpdate, onDelete }) {
   if (!field) return null
+  const optionsText = Array.isArray(field.options) ? field.options.join('\n') : (field.options || '')
   return (
     <div className="field-properties">
       <div className="prop-row">
@@ -290,6 +292,27 @@ function FieldProperties({ field, signers, onUpdate, onDelete }) {
         <label>Label</label>
         <input type="text" value={field.label || ''} onChange={(e) => onUpdate({ label: e.target.value })} placeholder="Optional label" />
       </div>
+      {(field.type === 'radio' || field.type === 'choice') && (
+        <div className="prop-row">
+          <label>Options</label>
+          <textarea
+            className="prop-textarea"
+            rows={4}
+            value={optionsText}
+            onChange={(e) => onUpdate({ options: e.target.value })}
+            placeholder="One option per line"
+          />
+        </div>
+      )}
+      {['text', 'name', 'email', 'date', 'choice'].includes(field.type) && (
+        <div className="prop-row">
+          <label>Font Size (pt)</label>
+          <div className="position-inputs">
+            <input type="number" min={6} max={72} value={Math.round(field.font_size || 12)} onChange={(e) => onUpdate({ font_size: Math.max(6, Math.min(72, Number(e.target.value) || 12)) })} placeholder="12" />
+            <span className="prop-unit">pt</span>
+          </div>
+        </div>
+      )}
       <div className="prop-row">
         <label>Position (pt)</label>
         <div className="position-inputs">

@@ -103,7 +103,7 @@ export async function stampField(doc, page, field, font) {
       value.text != null ? String(value.text)
       : value.chosen != null ? String(value.chosen)
       : '';
-    const size = Math.min(height * 0.55, 14);
+    const size = clamp(field.font_size == null ? null : Number(field.font_size), 6, 48) || Math.min(height * 0.55, 14);
     const maxWidth = width - 4;
     const lines = wrap(font, text, size, maxWidth).slice(0, Math.max(1, Math.floor(height / (size * 1.35))));
     const lineH = size * 1.35;

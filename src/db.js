@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS fields (
   required INTEGER NOT NULL DEFAULT 1,
   options TEXT,
   value TEXT,
-  filled INTEGER NOT NULL DEFAULT 0
+  filled INTEGER NOT NULL DEFAULT 0,
+  font_size INTEGER NOT NULL DEFAULT 12
 );
 CREATE INDEX IF NOT EXISTS idx_fields_request ON fields(request_id);
 CREATE INDEX IF NOT EXISTS idx_fields_template ON fields(template_id);
@@ -123,6 +124,12 @@ export function initDb() {
   db.exec('PRAGMA journal_mode = WAL;');
   db.exec('PRAGMA foreign_keys = ON;');
   db.exec(SCHEMA);
+  try {
+    const cols = db.prepare('PRAGMA table_info(fields)').all();
+    if (!cols.some((c) => c.name === 'font_size')) {
+      db.exec('ALTER TABLE fields ADD COLUMN font_size INTEGER NOT NULL DEFAULT 12');
+    }
+  } catch {}
   return db;
 }
 

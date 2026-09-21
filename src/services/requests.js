@@ -2,7 +2,7 @@ import { config } from '../config.js';
 import { getStorage } from '../storage/index.js';
 import { sql, audit, setting } from '../db.js';
 import { randomId, randomUrlToken, sha256, nowIso } from '../crypto.js';
-import { stampSignedPdf, isFieldType } from './pdf.js';
+import { stampSignedPdf, isFieldType, clamp } from './pdf.js';
 import { buildCertificate } from './cert.js';
 
 export function requestById(id) {
@@ -33,6 +33,17 @@ function err(message, status) {
   return Object.assign(new Error(message), { status });
 }
 
+export function parseFieldOptions(options) {
+  if (options == null || options === '') return [];
+  const arr = Array.isArray(options) ? options : String(options).split(/\r?\n/);
+  return arr.map((o) => String(o).trim()).filter(Boolean);
+}
+
+function normalizeOptions(options) {
+  const arr = parseFieldOptions(options);
+  return arr.length ? arr.join('\n').slice(0, 2000) : null;
+}
+
 function sanitizeField(f, i) {
   const page = Number(f.page);
   const x = Number(f.x);
@@ -51,9 +62,10 @@ function sanitizeField(f, i) {
     page, x, y, width, height,
     type: f.type,
     signer_index: signerIndex,
+    font_size: Math.round(clamp(f.font_size == null ? 12 : Number(f.font_size), 6, 72)),
     label: String(f.label || '').slice(0, 200),
     required: f.required === false || f.required === 0 ? 0 : 1,
-    options: f.options ? String(f.options).slice(0, 2000) : null,
+    options: normalizeOptions(f.options),
     value: f.value ? String(f.value).slice(0, 4000) : null,
   };
 }
@@ -102,9 +114,9 @@ export async function createRequest({ docId, signers, fields, mode, message, ema
     cleanFields.forEach((f) => {
       const signerRow = createdSigners[f.signer_index];
       sql.run(
-        'INSERT INTO fields (id, request_id, page, x, y, width, height, type, signer_id, signer_index, label, required, options, value, filled) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        'INSERT INTO fields (id, request_id, page, x, y, width, height, type, signer_id, signer_index, label, required, options, value, filled, font_size) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
         randomId('fld'), requestId, f.page, f.x, f.y, f.width, f.height, f.type,
-        signerRow ? signerRow.id : null, f.signer_index, f.label, f.required, f.options, f.value, 0
+        signerRow ? signerRow.id : null, f.signer_index, f.label, f.required, f.options, f.value, 0, f.font_size
       );
     });
     sql.run('UPDATE documents SET status = ?, updated_at = ? WHERE id = ?', 'Sent', now, docId);
@@ -196,18 +208,31 @@ export async function signRequest({ signerToken, values, ip, userAgent }) {
         if (checked) completedCount++;
         continue;
       }
-      const text = raw === undefined || raw === null ? '' : String(raw);
       if (f.type === 'signature' || f.type === 'initials') {
-        if (!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(text)) {
-          if (f.required) missing.push(f.id);
-          continue;
-        }
+        const text = raw === undefined || raw === null ? '' : String(raw);
+        if (!text) { if (f.required) missing.push(f.id); continue; }
+        if (!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(text)) throw err('Invalid signature image', 400);
         if (text.length > config.maxSigImageBytes * 4) throw err('Signature image too large', 413);
         sql.run('UPDATE fields SET value = ?, filled = ? WHERE id = ?', JSON.stringify({ imageDataUrl: text }), 1, f.id);
         completedCount++;
         continue;
       }
-      if (f.required && !text.trim()) { missing.push(f.id); continue; }
+      const text = raw === undefined || raw === null ? '' : String(raw).trim();
+      if (text) {
+        if (f.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) {
+          throw err('Please enter a valid email address', 400);
+        }
+        if (f.type === 'date' && Number.isNaN(Date.parse(text))) {
+          throw err('Please enter a valid date', 400);
+        }
+        if ((f.type === 'radio' || f.type === 'choice') && f.options) {
+          const opts = parseFieldOptions(f.options);
+          if (opts.length && !opts.includes(text)) {
+            throw err('Please choose one of the provided options', 400);
+          }
+        }
+      }
+      if (f.required && !text) { missing.push(f.id); continue; }
       if (text) {
         const key = f.type === 'radio' || f.type === 'choice' ? 'chosen' : 'text';
         sql.run('UPDATE fields SET value = ?, filled = ? WHERE id = ?', JSON.stringify({ [key]: text.slice(0, 4000) }), 1, f.id);
